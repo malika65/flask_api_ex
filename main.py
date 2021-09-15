@@ -1,10 +1,27 @@
 from flask import Flask
 from flask_restful import Api, Resource, reqparse, abort
+from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 api = Api(app)
+# Change configuration settings. Define the location of our database
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+db = SQLAlchemy(app)
 
+# model to store videos
+class VideoModel(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False) # max length = 100
+    views =  db.Column(db.Integer, nullable=False)
+    likes = db.Column(db.Integer, nullable=False)
 
+    # representstion of the object
+    def __repr__(self):
+        return f'Video(name={name},views={views},likes={likes})'
+
+# only do it ones , to create database
+# db.create_all()
+ 
 # If you specify the 'help' value, it will be rendered as the error 
 # message when a type error is raised while parsing it
 video_put_args = reqparse.RequestParser()
